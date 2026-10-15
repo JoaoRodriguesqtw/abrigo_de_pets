@@ -175,9 +175,13 @@ app.patch("/pets/:idPet",(req,res)=>{
 function deletar(id){
 const index_pet = pets.findIndex((pet) => pet.idPet === id);
 
-if (index_pet !== -1){
+  if (index_pet === -1) {
+    return false;
+  }
+
   pets.splice(index_pet, 1);
-}
+  return true;
+
 }
 
 app.delete("/pets/:idPet",(req,res)=>{
@@ -189,8 +193,12 @@ app.delete("/pets/:idPet",(req,res)=>{
       .json({ mensagem: "o parametro deve ser um numero valido" });
   }
 
+  if (!deletar(id)) {
+    return res.status(404).send();
+  }
 
-     deletar(id)
+
+   
     res.status(204).send();
 })
 
