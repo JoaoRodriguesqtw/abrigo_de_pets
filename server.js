@@ -151,10 +151,15 @@ app.patch("/pets/:idPet",(req,res)=>{
       .json({ mensagem: "fgAdotado deve ser true ou false" });
   }
 
-  if( req.body === undefined){
-       return res
+  if (
+    nome === undefined &&
+    especie === undefined &&
+    idade === undefined &&
+    adotado === undefined
+  ) {
+    return res
       .status(400)
-      .json({ mensagem: "body deve haver algo" });
+      .json({ mensagem: "envie ao menos um campo para atualizar" });
   }
 
 
