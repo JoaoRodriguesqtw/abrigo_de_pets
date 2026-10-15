@@ -175,6 +175,7 @@ app.patch("/pets/:idPet",(req,res)=>{
 function deletar(id){
 const index_pet = pets.findIndex((pet) => pet.idPet === id);
 
+// criado mas deixado em comentario para a parte 2
   // if (index_pet === -1) {
   //   return false;
   // }
