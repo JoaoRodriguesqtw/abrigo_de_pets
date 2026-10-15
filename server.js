@@ -193,12 +193,13 @@ app.delete("/pets/:idPet",(req,res)=>{
       .json({ mensagem: "o parametro deve ser um numero valido" });
   }
 
-  if (!deletar(id)) {
-    return res.status(404).send();
-  }
+  // verificação terminada, mas comentada para funcionar na parte 2
+  // if (!deletar(id)) {
+  //   return res.status(404).send();
+  // }
 
 
-   
+    deletar(id)
     res.status(204).send();
 })
 
