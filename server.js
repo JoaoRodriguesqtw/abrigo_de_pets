@@ -175,12 +175,16 @@ app.patch("/pets/:idPet",(req,res)=>{
 function deletar(id){
 const index_pet = pets.findIndex((pet) => pet.idPet === id);
 
-  if (index_pet === -1) {
-    return false;
-  }
+  // if (index_pet === -1) {
+  //   return false;
+  // }
 
-  pets.splice(index_pet, 1);
-  return true;
+  // pets.splice(index_pet, 1);
+  // return true;
+
+   if (index_pet !== -1) {
+     pets.splice(index_pet, 1);
+   }
 
 }
 
