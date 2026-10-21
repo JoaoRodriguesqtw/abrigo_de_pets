@@ -12,6 +12,7 @@ API REST simples para gerenciamento de pets de um abrigo, desenvolvida com **Nod
 ### Pré-requisitos
 
 - [Node.js](https://nodejs.org/) instalado (versão 18 ou superior)
+- [Postman](https://www.postman.com/) para testar as rotas
 
 ### Passo a passo
 
@@ -201,28 +202,73 @@ Remove um pet pelo ID.
 
 ---
 
-## Exemplos de uso com cURL
+## Testando no Postman
 
-```bash
-# Listar todos os pets
-curl http://localhost:3000/pets
+Com o servidor rodando (`node index.js`), abra o Postman e crie uma nova requisição para cada rota abaixo.
 
-# Buscar o pet de ID 1
-curl http://localhost:3000/pets/1
+> Nas rotas com corpo (`POST` e `PATCH`), vá na aba **Body**, marque **raw** e escolha o formato **JSON** no menu à direita. O Postman adiciona o header `Content-Type: application/json` automaticamente.
 
-# Criar um pet
-curl -X POST http://localhost:3000/pets \
-  -H "Content-Type: application/json" \
-  -d '{"dsNome": "Mia", "dsEspecie": "gato", "nuIdade": 2}'
+### 1. Listar todos os pets
 
-# Marcar o pet 1 como adotado
-curl -X PATCH http://localhost:3000/pets/1 \
-  -H "Content-Type: application/json" \
-  -d '{"fgAdotado": true}'
+- **Método:** `GET`
+- **URL:** `http://localhost:3000/pets`
+- **Body:** nenhum
+- **Resultado esperado:** status `200 OK` com a lista de pets.
 
-# Remover o pet 1
-curl -X DELETE http://localhost:3000/pets/1
+### 2. Buscar um pet pelo ID
+
+- **Método:** `GET`
+- **URL:** `http://localhost:3000/pets/1`
+- **Body:** nenhum
+- **Resultado esperado:** status `200 OK` com o pet de ID 1.
+- **Testes de erro:**
+  - `http://localhost:3000/pets/abc` → `400 Bad Request`
+  - `http://localhost:3000/pets/999` → `404 Not Found`
+
+### 3. Criar um pet
+
+- **Método:** `POST`
+- **URL:** `http://localhost:3000/pets`
+- **Body** (raw → JSON):
+
+```json
+{
+  "dsNome": "Mia",
+  "dsEspecie": "gato",
+  "nuIdade": 2
+}
 ```
+
+- **Resultado esperado:** status `201 Created` com o pet criado.
+- **Teste de erro:** envie o body sem `dsNome` → `400 Bad Request`.
+
+### 4. Atualizar um pet
+
+- **Método:** `PATCH`
+- **URL:** `http://localhost:3000/pets/1`
+- **Body** (raw → JSON):
+
+```json
+{
+  "fgAdotado": true
+}
+```
+
+- **Resultado esperado:** status `200 OK` com o pet atualizado.
+- **Testes de erro:**
+  - Body vazio `{}` → `400 Bad Request`
+  - `"fgAdotado": "sim"` → `400 Bad Request`
+  - ID inexistente (ex.: `/pets/999`) → `404 Not Found`
+
+### 5. Remover um pet
+
+- **Método:** `DELETE`
+- **URL:** `http://localhost:3000/pets/1`
+- **Body:** nenhum
+- **Resultado esperado:** status `204 No Content` (sem corpo na resposta).
+- **Teste de erro:** `http://localhost:3000/pets/abc` → `400 Bad Request`.
+
+> Depois de remover, faça um `GET /pets/1` para confirmar que o pet não existe mais (`404 Not Found`).
 
 ## Estrutura do código
 
@@ -241,7 +287,3 @@ O arquivo está organizado em funções de acesso aos dados e rotas:
 - Os dados são armazenados **em memória**: ao reiniciar o servidor, voltam ao estado inicial (apenas o pet "Rex").
 - A porta utilizada é a `3000`.
 - As respostas de erro de validação usam o formato `{ "mensagem": "..." }`.
-
-## Autor
-
-Desenvolvido por **[seu nome]** como parte de avaliação de Backend.
